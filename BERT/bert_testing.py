@@ -6,27 +6,10 @@ from transformers import BertTokenizer
 from torch.utils.data import TensorDataset
 from torch.utils.data import DataLoader, RandomSampler
 from transformers import BertForSequenceClassification
-import sqlite3
-from BERT.models import HS6Label as hs6
-
+# from DB.models import HS6Label as hs6
 
 batch_size = 8
 output_dir = '.\\data'
-
-# key = hs6.objects.all()
-# print(key[0]['labels'])
-
-
-# with sqlite3.connect('./db.sqlite3') as conn:
-#     cur = conn.cursor()
-#     query = "select * from HS6_label"
-#     cur.execute(query)
-#     result = cur.fetchall()
-# aa = hs6.objects.all()
-
-
-
-
 
 
 def labeldata_2_dict(path):
@@ -72,16 +55,6 @@ def prepare_testset(text):
     return test_dataset, test_dataloader
 
 
-# class Singleton(type):
-#     __instance = {}
-#     def __call__(cls, *args, **kwargs):
-#         if cls not in cls.__instance:
-#             cls.__instance[cls] = super().__call__(*args, **kwargs)
-#
-#         return cls.__instance[cls]
-
-
-
 class DataLoading:
 
     def __init__(self):
@@ -91,7 +64,7 @@ class DataLoading:
         self.label_csv = cwd + where_label_csv + label_csv_name
 
     def data_load(self):
-        labels_dict, id_to_label_dict = labeldata_2_dict(hs6.objects.all())
+        labels_dict, id_to_label_dict = labeldata_2_dict(self.label_csv)
         trained_model = BertForSequenceClassification.from_pretrained(output_dir)
 
         if torch.cuda.is_available():
