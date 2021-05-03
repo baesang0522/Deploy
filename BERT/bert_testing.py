@@ -6,7 +6,6 @@ from transformers import BertTokenizer
 from torch.utils.data import TensorDataset
 from torch.utils.data import DataLoader, RandomSampler
 from transformers import BertForSequenceClassification
-# from DB.models import HS6Label as hs6
 
 batch_size = 8
 output_dir = '.\\data'
@@ -57,14 +56,7 @@ def prepare_testset(text):
 
 class DataLoading:
 
-    def __init__(self):
-        cwd = os.getcwd()
-        where_label_csv = '\\data\\'
-        label_csv_name = 'label_csv.csv'
-        self.label_csv = cwd + where_label_csv + label_csv_name
-
     def data_load(self):
-        labels_dict, id_to_label_dict = labeldata_2_dict(self.label_csv)
         trained_model = BertForSequenceClassification.from_pretrained(output_dir)
 
         if torch.cuda.is_available():
@@ -79,7 +71,7 @@ class DataLoading:
 
         trained_model.to(DEVICE)
 
-        return labels_dict, id_to_label_dict, trained_model, DEVICE
+        return trained_model, DEVICE
 
 
 def bert_predict(text, id_to_label_dict, trained_model, DEVICE):
